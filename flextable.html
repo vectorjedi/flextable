@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      html,
+      body,
+      * {
+        box-sizing: border-box;
+      }
+	  
+	  html,
+      body {
+        margin: 0;
+		    padding: 0;
+		    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      a:focus:not(:focus-visible) { outline: none }
+
+      .flextable__wrapper {
+		    --padding: 30px;
+        --tablecolumns: 3;
+
+        width: auto;
+        margin: 0 var(--padding);
+        display: block;
+        position: relative;
+      }
+
+      .flextable__wrapper .stickyhead__wrapper {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        position: absolute;
+        top: 1rem;
+        left: 0;
+        right: 0;
+        z-index: 2;
+      }
+
+      .flextable__wrapper .stickyhead__box {
+        align-items: center;
+        display: none;
+        height: 5rem;
+        justify-content: space-between;
+        padding: 0;
+        text-align: center;
+        width: 30%;
+      }
+
+      h1,
+      .h1,
+      h2,
+      .h2,
+      h3,
+      .h3,
+      h5,
+      .h5,
+      h5,
+      .h5 {
+		    display: block;
+        font-weight: bold;
+        margin: 0;
+        text-transform: uppercase;
+        width: 100%;
+      }
+
+      .flextable__wrapper .stickyhead__box a {
+        align-items: center;
+		    justify-content: center;
+		    flex-wrap: wrap;
+        color: #fff;
+        display: flex;
+		    flex-direction: column;
+        height: 100%;
+        width: 100%;
+        text-decoration: none;
+      }
+
+      .flextable__wrapper .stickyhead__box a:hover {
+        text-decoration: none;
+      }
+
+      .flextable__wrapper .icon {
+        font-size: 2rem;
+        width: 100%;
+      }
+
+      .flextable__wrapper .icon.icon--check {
+        color: #02aa29;
+      }
+
+      .flextable__wrapper .icon.icon--cross {
+        color: #da0117;
+      }
+
+      .flextable__wrapper .icon.icon-info {
+        color: #001fcf;
+        margin-left: -1.75rem;
+      }
+
+      .flextable__wrapper details {
+        margin: 0;
+        padding: 0;
+        margin-top: 0.5rem;
+        width: 100%;
+        max-height: 2.75rem;
+        overflow: hidden;
+      }
+      .flextable__wrapper details[open] {
+        border: 1px solid #7d8ff1;
+        background-color: #d9deff;
+        transition: max-height 0.25s linear;
+        max-height: 12rem;
+      }
+
+      .flextable__wrapper summary {
+        display: block;
+        font-weight: bold;
+        width: 100%;
+        list-style: none;
+      }
+
+      .flextable__wrapper summary:focus {
+        outline: 1px solid #7d8ff1;
+      }
+
+      .flextable__wrapper details[open] summary:focus {
+        outline: none;
+      }
+
+      .flextable__wrapper summary::-webkit-details-marker {
+        background: transparent;
+        color: transparent;
+      }
+
+      .flextable__wrapper summary:focus::-webkit-details-marker {
+        background: transparent;
+      }
+
+      .flextable__wrapper details .details--text {
+        display: inline-block;
+        padding: 0.5rem;
+      }
+
+      .flextable__wrapper .flextable__table {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        overflow-x: auto;
+        padding-top: 3rem;
+        position: relative;
+        width: 100%;
+      }
+
+      .flextable__wrapper .flextable__table--scroll {
+        height: 100%;
+        margin: auto;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        position: relative;
+        scroll-behavior: smooth;
+        scroll-snap-type: both mandatory;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .flextable__wrapper .flextable__table--scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .flextable__wrapper .flextable__table--scroll {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .flextable__wrapper
+        .flextable__table--scroll
+        .flextable__cell--desktop-recommended {
+        background-color: rgba(88, 202, 231, 0.2);
+        border: 1px solid #58cae7;
+        border-bottom: 0;
+        border-top: 0;
+      }
+
+      .flextable__wrapper .flextable__row {
+        align-self: stretch;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        flex: 0 0 75%;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        height: auto;
+        justify-content: stretch;
+        margin: 0;
+      }
+
+      .flextable__wrapper .flextable__row.flextable__row--scrollwrapper {
+        border-bottom: 0;
+		    flex: 0 0 75%;
+      }
+
+      .flextable__wrapper .flextable__cell {
+        align-items: center;
+        align-self: stretch;
+        background-color: #fff;
+        display: flex;
+        flex: 1 0 25%;
+        flex-flow: column nowrap;
+        height: auto;
+        justify-content: flex-start;
+        margin-right: 0;
+        padding: 10px 10px;
+        position: relative;
+        text-align: center;
+      }
+
+      .flextable__wrapper .flextable__cell.flextable__cell--sticky {
+        align-items: flex-end;
+        padding: 10px;
+        text-align: right;
+      }
+
+      .flextable__wrapper .flextable__cell a.slideanchor {
+        display: block;
+        position: absolute;
+        right: 0;
+        top: -6rem;
+        visibility: hidden;
+        width: 100%;
+        z-index: 10000;
+      }
+
+      .flextable__wrapper .flextable__cell:not(.flextable__cell--sticky) {
+        scroll-snap-align: end;
+        scroll-padding: 0 0px 0px 100px;
+      }
+
+      .flextable__wrapper .flextable__row--header .flextable__cell {
+        justify-content: flex-end;
+        padding: 1.5rem;
+      }
+
+      .flextable__wrapper
+        .flextable__row--header
+        .flextable__cell.flextable__cell--desktop-recommended {
+        border-top: 1px solid #4d8492;
+      }
+
+      .flextable__wrapper
+        .flextable__row--header
+        .flextable__cell.flextable__cell--desktop-recommended
+        .recommended-header {
+        display: block;
+        margin-bottom: 2rem;
+        text-align: center;
+        width: 100%;
+      }
+
+      .flextable__wrapper .desktop__header {
+        height: 10rem;
+        width: 100%;
+      }
+
+      .flextable__wrapper .desktop__header h1 {
+        margin-top: 1.5rem; 
+		    color: #fff;
+      }
+
+      .flextable__wrapper .header__color--yellow {
+        background-color: #8a6e3b;
+      }
+
+      .flextable__wrapper .desktop__header--yellow h5 {
+        color: #8a6e3b;
+      }
+
+      .flextable__wrapper .header__color--blue {
+        background-color: #4d8492;
+      }
+
+      .flextable__wrapper .desktop__header--blue h5 {
+        color: #4d8492;
+      }
+
+      .flextable__wrapper .header__color--green {
+        background-color: #34855a;
+      }
+
+      .flextable__wrapper .desktop__header--green h5 {
+        color: #34855a;
+      }
+
+      .flextable__wrapper .mobile__header {
+        display: none;
+		    color: #fff;
+      }
+
+      @media all and (max-width: 767px) {
+        .flextable__wrapper details {
+          left: calc(50vw - calc(var(--padding) * 2));
+          position: absolute;
+          right: 0;
+          width: auto;
+          margin-top: 1.5rem;
+        }
+        .flextable__wrapper details[open] {
+          z-index: 1;
+        }
+        .flextable__wrapper .mobile__header {
+          display: block;
+          margin-bottom: 0;
+		      height:100%;
+          padding: .5rem 0;
+        }
+        .flextable__wrapper .desktop__header {
+          display: none;
+        }
+        .flextable__wrapper .flextable__table {
+          width: calc(100vw - calc(var(--padding) * 2));
+          padding-top: 6rem;
+        }
+        .flextable__wrapper .flextable__table.flextable__table--scroll {
+          scroll-snap-points-x: repeat(100vw);
+        }
+        .flextable__wrapper .stickyhead__box {
+          display: flex;
+        }
+        .flextable__wrapper .flextable__row {
+          align-self: flex-start;
+          flex: 0 0 100%;
+          justify-content: flex-start;
+        }
+        .flextable__wrapper
+          .flextable__row.flextable__row--header
+          .flextable__cell {
+          background-color: transparent;
+          border: 0;
+          min-height: initial;
+          padding: 10px 0;
+        }
+        .flextable__wrapper
+          .flextable__row.flextable__row--header
+          .flextable__cell.flextable__cell--desktop-recommended
+          .recommended-header {
+          display: none;
+        }
+        .flextable__wrapper
+          .flextable__row.flextable__row--header
+          .flextable__cell--sticky {
+          width: 0;
+        }
+        .flextable__wrapper .flextable__row:not(.flextable__row--header) {
+          height: 6rem;
+        }
+        .flextable__wrapper .flextable__row--header,
+        .flextable__wrapper .flextable__row--header .flextable__row {
+          height: 4rem;
+        }
+        .flextable__wrapper .flextable__row.flextable__row--header,
+        .flextable__wrapper
+          .flextable__row:not(.flextable__row--header)
+          .flextable__row {
+          border-bottom: 0;
+        }
+        .flextable__wrapper
+          .flextable__cell.flextable__cell--desktop-recommended {
+          border: 0 !important;
+        }
+        .flextable__wrapper .flextable__row.flextable__row--scrollwrapper {
+          flex: 0 0 calc(var(--tablecolumns) * calc(100vw - calc (var(--padding) * 2)));
+          margin-left: -calc(50vw - calc(var(--padding) * 2));
+          min-width: calc(var(--tablecolumns) * calc(100vw - calc(var(--padding) * 2)));
+        }
+        .flextable__wrapper .flextable__cell {
+          flex: 0 0 calc(100vw - calc(var(--padding) * 2));
+          justify-content: flex-start;
+          max-width: initial;
+        }
+        .flextable__wrapper .flextable__cell:not(.flextable__cell--sticky) {
+          padding-left: calc(50vw - calc(var(--padding) * 2));
+        }
+        .flextable__wrapper .flextable__cell.flextable__cell--sticky {
+          flex: 0 0 calc(50vw - calc(var(--padding) * 2));
+          width: calc(50vw - calc(var(--padding) * 2));
+          align-items: flex-end;
+          left: 0;
+          position: sticky;
+          top: 0;
+          z-index: 2;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- START: table -->
+    <div class="flextable__wrapper">
+      <div class="stickyhead__wrapper">
+        <div class="stickyhead__box header__color--yellow">
+          <a href="#free-tier">
+			<h5>free</h5>
+			<h2>$ 0</h2>
+          </a>
+        </div>
+        <div class="stickyhead__box header__color--blue">
+          <a href="#basic-tier">
+            <h5>basic</h5>
+			<h2>$ 99</h2>
+          </a>
+        </div>
+        <div class="stickyhead__box header__color--green">
+          <a href="#pro-tier">
+            <h5>pro</h5>
+			<h2>$ 299</h2>
+          </a>
+        </div>
+      </div>
+      <div
+        aria-label="Subscription Types"
+        class="flextable__table flextable__table--scroll"
+        role="table"
+      >
+        <div class="flextable__row flextable__row--header" role="rowgroup">
+          <div
+            class="flextable__cell flextable__cell--sticky"
+            role="columnheader"
+          ></div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="columnheader">
+              <a class="slideanchor" id="free-tier" tabindex="1"></a>
+              <span class="h5 mobile__header header__color--yellow">free</span>
+              <div class="desktop__header header__color--yellow">
+                <h1>free</h1>
+              </div>
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="columnheader"
+            >
+              <h3 class="recommended-header">Recommended</h3>
+              <a class="slideanchor" id="basic-tier" tabindex="1"></a>
+              <span class="h5 mobile__header header__color--blue"
+                >basic (recommended)</span
+              >
+              <div class="desktop__header header__color--blue">
+                <h1>basic</h1>
+              </div>
+            </div>
+            <div class="flextable__cell" role="columnheader">
+              <a class="slideanchor" id="pro-tier" tabindex="1"></a>
+              <span class="h5 mobile__header header__color--green">pro</span>
+              <div class="desktop__header header__color--green">
+                <h1>pro</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            Access Minutes
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">1000 min/month
+				<details>
+                <summary>
+                  <span class="icon icon-info" aria-label="more Information"
+                    >&#x1F6C8;</span
+                  >
+                </summary>
+                <span class="details--text"
+                  >When exeeding the access quota, you will be charged with additional 0.05$ per access minute</span
+                >
+              </details>
+			</div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              10,0000 min/month
+              <details>
+                <summary>
+                  <span class="icon icon-info" aria-label="more Information"
+                    >&#x1F6C8;</span
+                  >
+                </summary>
+                <span class="details--text"
+                  >When exeeding the access quota, you will be charged with additional 0.01$ per access minute</span
+                >
+              </details>
+            </div>
+            <div class="flextable__cell" role="cell">No Limit</div>
+          </div>
+        </div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            Monthly Cancelable
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            Community Support
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+		  </div>
+		</div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            Bonus Content
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            Early Access
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            P2P Sessions
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="flextable__row" role="row">
+          <div class="flextable__cell flextable__cell--sticky" role="cell">
+            20/7 Support
+          </div>
+          <div class="flextable__row--scrollwrapper flextable__row">
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div
+              class="flextable__cell flextable__cell--desktop-recommended"
+              role="cell"
+            >
+              <span class="icon icon--cross" aria-label="not included"
+                >&#10006;</span
+              >
+            </div>
+            <div class="flextable__cell" role="cell">
+              <span class="icon icon--check" aria-label="included"
+                >&#10004;</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END: table -->
+  </body>
+</html>

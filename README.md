@@ -44,11 +44,11 @@ This repo will not be maintained further.
 
 ## Authors
 
-- **Mo Beumers** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+- **Mo Beumers** - *Initial work* - [VectorJedi](https://github.com/vectorjedi)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 

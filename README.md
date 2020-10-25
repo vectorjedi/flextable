@@ -7,10 +7,12 @@ This table makes use of the CSS ```scroll-snap-*``` and CSS Flexbox properties. 
 It also is operable with touch and keyboard: you can swipe the table columns horizontally, and tab'n'enter through the header anchors to jumpscroll smoothly to the next column.
 Since this table uses anchor tags, you can even deeplink to the table column headers.
 
-<iframe height="600" style="width: 100%;" scrolling="no" title="Responsive CSS only Flex Table " src="https://codepen.io/vectorjedi/embed/LYZWNXG?height=265&theme-id=dark&default-tab=css,result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href='https://codepen.io/vectorjedi/pen/LYZWNXG'>Responsive CSS only Flex Table </a> by Mo Beumers
-  (<a href='https://codepen.io/vectorjedi'>@vectorjedi</a>) on <a href='https://codepen.io'>CodePen</a>.
-</iframe>
+<p class="codepen" data-height="265" data-theme-id="dark" data-default-tab="css,result" data-user="vectorjedi" data-slug-hash="LYZWNXG" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Responsive CSS only Flex Table ">
+  <span>See the Pen <a href="https://codepen.io/vectorjedi/pen/LYZWNXG">
+  Responsive CSS only Flex Table </a> by Mo Beumers (<a href="https://codepen.io/vectorjedi">@vectorjedi</a>)
+  on <a href="https://codepen.io">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
 ## Getting Started
 
